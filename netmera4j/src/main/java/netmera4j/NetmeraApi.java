@@ -3,10 +3,7 @@ package netmera4j;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.exception.NetmeraError;
 import netmera4j.request.device.*;
-import netmera4j.request.notification.CreateTransactionalNotificationRequest;
-import netmera4j.request.notification.GetPushStatsRequest;
-import netmera4j.request.notification.SendBulkNotificationRequest;
-import netmera4j.request.notification.SendTransactionalNotificationRequest;
+import netmera4j.request.notification.*;
 import netmera4j.response.*;
 import netmera4j.service.NotificationService;
 import netmera4j.service.UserService;
@@ -217,6 +214,14 @@ public class NetmeraApi implements Netmera {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", getPushStatsRequest);
         Call<GetPushStatsResponse> call = notificationService.getPushStats(getPushStatsRequest.getNotificationKey());
+        call.enqueue(callBack);
+    }
+
+    @Override
+    public void sendRequest(GetPushStatsInDateRangeRequest getPushStatsInDateRangeRequest, NetmeraCallBack<GetPushStatsInDateRangeResponse> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", getPushStatsInDateRangeRequest);
+        Call<GetPushStatsInDateRangeResponse> call = notificationService.getPushStatsInDateRange(getPushStatsInDateRangeRequest.getStartDate(), getPushStatsInDateRangeRequest.getEndDate());
         call.enqueue(callBack);
     }
 }

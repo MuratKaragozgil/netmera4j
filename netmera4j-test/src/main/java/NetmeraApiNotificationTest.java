@@ -5,10 +5,8 @@ import netmera4j.constant.Platform;
 import netmera4j.model.notification.BulkMessage;
 import netmera4j.model.notification.SingleMessage;
 import netmera4j.model.notification.Target;
-import netmera4j.request.notification.CreateTransactionalNotificationRequest;
-import netmera4j.request.notification.GetPushStatsRequest;
-import netmera4j.request.notification.SendBulkNotificationRequest;
-import netmera4j.request.notification.SendTransactionalNotificationRequest;
+import netmera4j.request.notification.*;
+import netmera4j.response.GetPushStatsInDateRangeResponse;
 import netmera4j.response.GetPushStatsResponse;
 import netmera4j.response.NotificationResponse;
 import org.slf4j.Logger;
@@ -55,6 +53,10 @@ public class NetmeraApiNotificationTest {
 
         completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testGetPushStats(completableFuture);
+        completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testGetPushStatsInDateRange(completableFuture);
         completableFuture.get();
     }
 
@@ -105,6 +107,31 @@ public class NetmeraApiNotificationTest {
 
             @Override
             protected void handleError(Response<GetPushStatsResponse> response) {
+
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+
+            }
+        });
+    }
+
+    private void testGetPushStatsInDateRange(CompletableFuture completableFuture) {
+        netmeraApi.sendRequest(GetPushStatsInDateRangeRequest.builder().startDate(1559336400000l).endDate(System.currentTimeMillis()).build(), new NetmeraCallBack<GetPushStatsInDateRangeResponse>() {
+            @Override
+            protected void handleResponseCode(int httpStatus) {
+                logger.info("------------------------------------");
+                completableFuture.complete(httpStatus);
+            }
+
+            @Override
+            protected void handleResponseData(GetPushStatsInDateRangeResponse data) {
+
+            }
+
+            @Override
+            protected void handleError(Response<GetPushStatsInDateRangeResponse> response) {
 
             }
 

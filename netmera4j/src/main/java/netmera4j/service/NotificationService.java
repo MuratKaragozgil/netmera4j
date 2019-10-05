@@ -3,6 +3,7 @@ package netmera4j.service;
 import netmera4j.request.notification.CreateTransactionalNotificationRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
+import netmera4j.response.GetPushStatsInDateRangeResponse;
 import netmera4j.response.GetPushStatsResponse;
 import netmera4j.response.NotificationResponse;
 import retrofit2.Call;
@@ -32,4 +33,7 @@ public interface NotificationService {
 
     @GET("/rest/3.0/getPushStats")
     Call<GetPushStatsResponse> getPushStats(@Query("notificationKey") Integer notificationKey);
+
+    @GET("/rest/3.0/getPushStats")
+    Call<GetPushStatsInDateRangeResponse> getPushStatsInDateRange(@Query("start") Long start, @Query("end") Long end);
 }
