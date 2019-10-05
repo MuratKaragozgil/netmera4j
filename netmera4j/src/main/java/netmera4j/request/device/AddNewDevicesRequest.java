@@ -1,10 +1,14 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import netmera4j.model.device.NewDevice;
 import netmera4j.util.NotEmpty;
 import netmera4j.util.NotNull;
+
+import java.util.List;
+
 
 /**
  * @author Murat Karagözgil
@@ -12,9 +16,8 @@ import netmera4j.util.NotNull;
 @Getter
 @ToString
 @AllArgsConstructor
-public class DeleteProfileAttributeFromAllUsersRequest {
-    @NotNull
-    private String key;
+public class AddNewDevicesRequest {
     @NotEmpty
-    private String value;
+    @NotNull
+    private List<NewDevice> deviceList;
 }

@@ -1,7 +1,7 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.*;
-import netmera4j.model.UserAndProfileAttributeMap;
+import netmera4j.model.device.UserAndProfileAttributeMap;
 import netmera4j.util.NotEmpty;
 
 import java.util.List;

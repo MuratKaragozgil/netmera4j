@@ -1,4 +1,4 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 
 import lombok.Builder;

@@ -1,14 +1,11 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import netmera4j.model.NewDevice;
 import netmera4j.util.NotEmpty;
-import netmera4j.util.NotNull;
 
 import java.util.List;
-
 
 /**
  * @author Murat Karagözgil
@@ -16,8 +13,9 @@ import java.util.List;
 @Getter
 @ToString
 @AllArgsConstructor
-public class AddNewDevicesRequest {
+public class AddTagToUsersRequest {
     @NotEmpty
-    @NotNull
-    private List<NewDevice> deviceList;
+    private String tag;
+    @NotEmpty
+    private List<String> extIds;
 }

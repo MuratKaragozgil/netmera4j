@@ -1,7 +1,8 @@
 package netmera4j;
 
 import netmera4j.callback.NetmeraCallBack;
-import netmera4j.request.*;
+import netmera4j.request.device.*;
+import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
 import netmera4j.response.GetUserDevicesResponse;
@@ -48,4 +49,7 @@ public interface Netmera {
     void sendRequest(GetDeviceTokensRequest getDeviceTokensRequest, NetmeraCallBack<GetDeviceTokensResponse> callBack);
 
     void sendRequest(GetDeviceTokensResponse getDeviceTokensResponse, NetmeraCallBack<GetDeviceTokensResponse> callBack);
+
+    // Notification Requests
+    void sendRequest(SendBulkNotificationRequest sendBulkNotificationRequest, NetmeraCallBack<Void> callBack);
 }

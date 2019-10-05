@@ -1,10 +1,10 @@
 package netmera4j.service;
 
-import netmera4j.model.Category;
-import netmera4j.model.NewDevice;
-import netmera4j.model.UserAndProfileAttributeList;
-import netmera4j.model.UserAndProfileAttributeMap;
-import netmera4j.request.*;
+import netmera4j.model.device.Category;
+import netmera4j.model.device.NewDevice;
+import netmera4j.model.device.UserAndProfileAttributeList;
+import netmera4j.model.device.UserAndProfileAttributeMap;
+import netmera4j.request.device.*;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
 import netmera4j.response.GetUserDevicesResponse;

@@ -1,7 +1,7 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.*;
-import netmera4j.model.UserAndProfileAttributeList;
+import netmera4j.model.device.UserAndProfileAttributeList;
 import netmera4j.util.NotEmpty;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class PushProfileAttributesToUserRequest {
+@AllArgsConstructor
+public class PullProfileAttributesFromUserRequest {
     @NotEmpty
     private List<UserAndProfileAttributeList> userAndProfileAttributeLists;
 }

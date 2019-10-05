@@ -1,4 +1,4 @@
-package netmera4j.model;
+package netmera4j.model.device;
 
 import lombok.Getter;
 import lombok.Setter;

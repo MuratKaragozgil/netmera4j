@@ -1,4 +1,4 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @ToString
 @AllArgsConstructor
-public class AddTagToUsersRequest {
+public class RemoveTagFromUsersRequest {
     @NotEmpty
     private String tag;
     @NotEmpty

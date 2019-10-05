@@ -2,11 +2,11 @@ import netmera4j.Netmera;
 import netmera4j.NetmeraApi;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.constant.Platform;
-import netmera4j.model.Category;
-import netmera4j.model.NewDevice;
-import netmera4j.model.UserAndProfileAttributeList;
-import netmera4j.model.UserAndProfileAttributeMap;
-import netmera4j.request.*;
+import netmera4j.model.device.Category;
+import netmera4j.model.device.NewDevice;
+import netmera4j.model.device.UserAndProfileAttributeList;
+import netmera4j.model.device.UserAndProfileAttributeMap;
+import netmera4j.request.device.*;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
 import netmera4j.response.GetUserDevicesResponse;
@@ -21,9 +21,9 @@ import java.util.concurrent.ExecutionException;
 /**
  * @author Murat Karagözgil
  */
-public class NetmeraApiTest {
+public class NetmeraApiDeviceTest {
 
-    private Logger logger = LoggerFactory.getLogger(NetmeraApiTest.class);
+    private Logger logger = LoggerFactory.getLogger(NetmeraApiDeviceTest.class);
 
     private Netmera netmeraApi = NetmeraApi.Build(TARGET_HOST, API_KEY);
 
@@ -43,80 +43,79 @@ public class NetmeraApiTest {
     private static final String PROFILE_ATTRIBUTE_VALUE = "murat";
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        NetmeraApiTest netmeraApiTest = new NetmeraApiTest();
+        NetmeraApiDeviceTest netmeraApiDeviceTest = new NetmeraApiDeviceTest();
 
         // DEVICE
         CompletableFuture completableFuture = new CompletableFuture();
-        netmeraApiTest.testCreateNewDevicesRequest(completableFuture);
+        netmeraApiDeviceTest.testCreateNewDevicesRequest(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testGetUserDevicesRequest(completableFuture);
+        netmeraApiDeviceTest.testGetUserDevicesRequest(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testGetDeviceTokens(completableFuture);
+        netmeraApiDeviceTest.testGetDeviceTokens(completableFuture);
         completableFuture.get();
 
         // TAG
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testAddTagToUsersRequest(completableFuture);
+        netmeraApiDeviceTest.testAddTagToUsersRequest(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testRemoveTagToUsersRequest(completableFuture);
+        netmeraApiDeviceTest.testRemoveTagToUsersRequest(completableFuture);
         completableFuture.get();
 
         // PROFILE ATTRIBUTE
         completableFuture = new CompletableFuture();
-        netmeraApiTest.setProfileAttributeToUser(completableFuture);
+        netmeraApiDeviceTest.setProfileAttributeToUser(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.getProfileAttributeAUser(completableFuture);
+        netmeraApiDeviceTest.getProfileAttributeAUser(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testDeleteProfileAttributeFromAllUsers(completableFuture);
+        netmeraApiDeviceTest.testDeleteProfileAttributeFromAllUsers(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testPushProfileAttributesToUser(completableFuture);
+        netmeraApiDeviceTest.testPushProfileAttributesToUser(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testPullProfileAttributesFromUser(completableFuture);
+        netmeraApiDeviceTest.testPullProfileAttributesFromUser(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testUnsetProfileAttributes(completableFuture);
+        netmeraApiDeviceTest.testUnsetProfileAttributes(completableFuture);
         completableFuture.get();
 
         // CATEGORY
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testSetCategoryPreference(completableFuture);
+        netmeraApiDeviceTest.testSetCategoryPreference(completableFuture);
         completableFuture.get();
 
         // PUSH PREFERENCES
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testDisablePushWithDeviceToken(completableFuture);
+        netmeraApiDeviceTest.testDisablePushWithDeviceToken(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testDisablePushWithExternalId(completableFuture);
+        netmeraApiDeviceTest.testDisablePushWithExternalId(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testEnablePushWithDeviceToken(completableFuture);
+        netmeraApiDeviceTest.testEnablePushWithDeviceToken(completableFuture);
         completableFuture.get();
 
         completableFuture = new CompletableFuture();
-        netmeraApiTest.testEnablePushWithExternalId(completableFuture);
+        netmeraApiDeviceTest.testEnablePushWithExternalId(completableFuture);
         completableFuture.get();
     }
 
     public void testCreateNewDevicesRequest(CompletableFuture completableFuture) {
-        Netmera netmeraApi = NetmeraApi.Build(TARGET_HOST, API_KEY);
         netmeraApi.sendRequest(new AddNewDevicesRequest(NEW_DEVICE_LIST), getStandardCallBack(completableFuture));
     }
 

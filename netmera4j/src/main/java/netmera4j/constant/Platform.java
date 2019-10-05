@@ -6,7 +6,10 @@ package netmera4j.constant;
 public enum Platform {
 
     ANDROID("ANDROID"),
-    IOS("IOS");
+    IOS("IOS"),
+    CHROME("CHROME"),
+    MACOS("MACOS"),
+    FIREFOX("FIREFOX");
 
     private String name;
 

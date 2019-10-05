@@ -1,19 +1,20 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import netmera4j.util.NotEmpty;
+import netmera4j.util.NotNull;
 
 /**
  * @author Murat Karagözgil
  */
-@ToString
 @Getter
-@Setter
+@ToString
 @AllArgsConstructor
-public class GetProfileAttributesRequest {
+public class DeleteProfileAttributeFromAllUsersRequest {
+    @NotNull
+    private String key;
     @NotEmpty
-    private String externalId;
+    private String value;
 }

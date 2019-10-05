@@ -1,21 +1,19 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import netmera4j.util.NotEmpty;
-
-import java.util.List;
 
 /**
  * @author Murat Karagözgil
  */
-@Getter
 @ToString
+@Getter
+@Setter
 @AllArgsConstructor
-public class RemoveTagFromUsersRequest {
+public class GetProfileAttributesRequest {
     @NotEmpty
-    private String tag;
-    @NotEmpty
-    private List<String> extIds;
+    private String externalId;
 }

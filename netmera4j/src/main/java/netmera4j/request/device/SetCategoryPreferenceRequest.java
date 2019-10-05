@@ -1,7 +1,7 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.*;
-import netmera4j.model.Category;
+import netmera4j.model.device.Category;
 import netmera4j.util.NotEmpty;
 
 import java.util.ArrayList;

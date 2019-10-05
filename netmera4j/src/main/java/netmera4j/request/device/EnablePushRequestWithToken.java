@@ -1,4 +1,4 @@
-package netmera4j.request;
+package netmera4j.request.device;
 
 import lombok.*;
 import netmera4j.util.NotEmpty;
@@ -9,7 +9,7 @@ import netmera4j.util.NotEmpty;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DisablePushRequestWithToken {
+public class EnablePushRequestWithToken {
     @NotEmpty
     private String deviceToken;
 }
