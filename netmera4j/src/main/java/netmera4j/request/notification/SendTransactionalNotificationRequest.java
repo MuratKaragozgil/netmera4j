@@ -1,7 +1,7 @@
 package netmera4j.request.notification;
 
 import lombok.*;
-import netmera4j.model.notification.BulkMessage;
+import netmera4j.model.notification.SingleMessage;
 import netmera4j.model.notification.Target;
 import netmera4j.util.NotEmpty;
 
@@ -14,9 +14,11 @@ import netmera4j.util.NotEmpty;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class SendBulkNotificationRequest {
+public class SendTransactionalNotificationRequest {
     @NotEmpty
-    private BulkMessage message;
+    private String notificationKey;
+    private SingleMessage message;
     @NotEmpty
     private Target target;
+
 }

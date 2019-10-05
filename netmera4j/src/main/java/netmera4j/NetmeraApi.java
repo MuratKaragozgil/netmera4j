@@ -4,6 +4,8 @@ import netmera4j.callback.NetmeraCallBack;
 import netmera4j.exception.NetmeraError;
 import netmera4j.request.device.*;
 import netmera4j.request.notification.SendBulkNotificationRequest;
+import netmera4j.request.notification.SendTransactionalNotificationRequest;
+import netmera4j.response.NotificationResponse;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
 import netmera4j.response.GetUserDevicesResponse;
@@ -19,6 +21,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static netmera4j.constant.NetmeraApiContants.NETMERA_HEADER_KEY;
@@ -179,10 +182,26 @@ public class NetmeraApi implements Netmera {
     }
 
     // Notification Requests
-    public void sendRequest(SendBulkNotificationRequest sendBulkNotificationRequest, NetmeraCallBack<Void> callBack) {
+    public void sendRequest(SendBulkNotificationRequest sendBulkNotificationRequest, NetmeraCallBack<NotificationResponse> callBack) {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", sendBulkNotificationRequest);
-        Call<Void> call = notificationService.sendBulkNotification(sendBulkNotificationRequest);
+        Call<NotificationResponse> call = notificationService.sendBulkNotification(sendBulkNotificationRequest);
+        call.enqueue(callBack);
+    }
+
+    @Override
+    public void sendRequest(SendTransactionalNotificationRequest sendTransactionalNotificationRequest, NetmeraCallBack<Void> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", sendTransactionalNotificationRequest);
+        Call<Void> call = notificationService.sendNotification(sendTransactionalNotificationRequest);
+        call.enqueue(callBack);
+    }
+
+    @Override
+    public void sendRequest(List<SendBulkNotificationRequest> sendBulkNotificationRequests, NetmeraCallBack<Void> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", sendBulkNotificationRequests);
+        Call<Void> call = notificationService.sendNotificationInChunks(sendBulkNotificationRequests);
         call.enqueue(callBack);
     }
 }

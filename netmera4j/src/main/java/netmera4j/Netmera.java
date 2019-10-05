@@ -3,11 +3,15 @@ package netmera4j;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.request.device.*;
 import netmera4j.request.notification.SendBulkNotificationRequest;
+import netmera4j.request.notification.SendTransactionalNotificationRequest;
+import netmera4j.response.NotificationResponse;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
 import netmera4j.response.GetUserDevicesResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * @author Murat Karagözgil
@@ -51,5 +55,9 @@ public interface Netmera {
     void sendRequest(GetDeviceTokensResponse getDeviceTokensResponse, NetmeraCallBack<GetDeviceTokensResponse> callBack);
 
     // Notification Requests
-    void sendRequest(SendBulkNotificationRequest sendBulkNotificationRequest, NetmeraCallBack<Void> callBack);
+    void sendRequest(SendBulkNotificationRequest sendBulkNotificationRequest, NetmeraCallBack<NotificationResponse> callBack);
+
+    void sendRequest(SendTransactionalNotificationRequest sendTransactionalNotificationRequest, NetmeraCallBack<Void> callBack);
+
+    void sendRequest(List<SendBulkNotificationRequest> sendBulkNotificationRequests, NetmeraCallBack<Void> callBack);
 }

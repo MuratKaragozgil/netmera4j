@@ -13,4 +13,6 @@ import lombok.*;
 @RequiredArgsConstructor
 public class Target {
     private boolean sendToAll;
+    private String extId;
+    private String deviceToken;
 }
