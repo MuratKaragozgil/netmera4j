@@ -3,12 +3,10 @@ package netmera4j;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.request.device.*;
 import netmera4j.request.notification.CreateTransactionalNotificationRequest;
+import netmera4j.request.notification.GetPushStatsRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
-import netmera4j.response.NotificationResponse;
-import netmera4j.response.GetDeviceTokensResponse;
-import netmera4j.response.GetProfileAttributesResponse;
-import netmera4j.response.GetUserDevicesResponse;
+import netmera4j.response.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,4 +61,6 @@ public interface Netmera {
     void sendRequest(List<SendBulkNotificationRequest> sendBulkNotificationRequests, NetmeraCallBack<Void> callBack);
 
     void sendRequest(CreateTransactionalNotificationRequest createTransactionalNotificationRequest, NetmeraCallBack<NotificationResponse> callBack);
+
+    void sendRequest(GetPushStatsRequest getPushStatsRequest, NetmeraCallBack<GetPushStatsResponse> callBack);
 }

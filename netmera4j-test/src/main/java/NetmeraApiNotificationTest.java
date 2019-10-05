@@ -6,8 +6,10 @@ import netmera4j.model.notification.BulkMessage;
 import netmera4j.model.notification.SingleMessage;
 import netmera4j.model.notification.Target;
 import netmera4j.request.notification.CreateTransactionalNotificationRequest;
+import netmera4j.request.notification.GetPushStatsRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
+import netmera4j.response.GetPushStatsResponse;
 import netmera4j.response.NotificationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,10 @@ public class NetmeraApiNotificationTest {
         completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testCreateTransactionalNotificationDefinition(completableFuture);
         completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testGetPushStats(completableFuture);
+        completableFuture.get();
     }
 
     private void testSendBasicBulkNotification(CompletableFuture completableFuture) {
@@ -82,6 +88,31 @@ public class NetmeraApiNotificationTest {
                 .message(MESSAGE) //
                 .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
                 .build(), getNotificationCallBack(completableFuture));
+    }
+
+    private void testGetPushStats(CompletableFuture completableFuture) {
+        netmeraApi.sendRequest(GetPushStatsRequest.builder().notificationKey(TRANSACTIONAL_NOTIFICATION_KEY).build(), new NetmeraCallBack<GetPushStatsResponse>() {
+            @Override
+            protected void handleResponseCode(int httpStatus) {
+                logger.info("------------------------------------");
+                completableFuture.complete(httpStatus);
+            }
+
+            @Override
+            protected void handleResponseData(GetPushStatsResponse data) {
+
+            }
+
+            @Override
+            protected void handleError(Response<GetPushStatsResponse> response) {
+
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+
+            }
+        });
     }
 
     private NetmeraCallBack<NotificationResponse> getNotificationCallBack(CompletableFuture completableFuture) {
