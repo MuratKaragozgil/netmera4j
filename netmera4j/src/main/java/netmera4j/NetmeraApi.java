@@ -3,12 +3,13 @@ package netmera4j;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.exception.NetmeraError;
 import netmera4j.request.device.*;
+import netmera4j.request.notification.CreateTransactionalNotificationRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
-import netmera4j.response.NotificationResponse;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
 import netmera4j.response.GetUserDevicesResponse;
+import netmera4j.response.NotificationResponse;
 import netmera4j.service.NotificationService;
 import netmera4j.service.UserService;
 import netmera4j.util.NetmeraProxy;
@@ -202,6 +203,14 @@ public class NetmeraApi implements Netmera {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", sendBulkNotificationRequests);
         Call<Void> call = notificationService.sendNotificationInChunks(sendBulkNotificationRequests);
+        call.enqueue(callBack);
+    }
+
+    @Override
+    public void sendRequest(CreateTransactionalNotificationRequest createTransactionalNotificationRequest, NetmeraCallBack<NotificationResponse> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", createTransactionalNotificationRequest);
+        Call<NotificationResponse> call = notificationService.createNotificationDefinition(createTransactionalNotificationRequest);
         call.enqueue(callBack);
     }
 }

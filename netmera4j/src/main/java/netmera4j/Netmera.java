@@ -2,6 +2,7 @@ package netmera4j;
 
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.request.device.*;
+import netmera4j.request.notification.CreateTransactionalNotificationRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
 import netmera4j.response.NotificationResponse;
@@ -60,4 +61,6 @@ public interface Netmera {
     void sendRequest(SendTransactionalNotificationRequest sendTransactionalNotificationRequest, NetmeraCallBack<Void> callBack);
 
     void sendRequest(List<SendBulkNotificationRequest> sendBulkNotificationRequests, NetmeraCallBack<Void> callBack);
+
+    void sendRequest(CreateTransactionalNotificationRequest createTransactionalNotificationRequest, NetmeraCallBack<NotificationResponse> callBack);
 }

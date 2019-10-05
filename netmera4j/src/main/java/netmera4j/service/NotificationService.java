@@ -1,5 +1,6 @@
 package netmera4j.service;
 
+import netmera4j.request.notification.CreateTransactionalNotificationRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
 import netmera4j.response.NotificationResponse;
@@ -22,4 +23,7 @@ public interface NotificationService {
 
     @POST("/rest/3.0/sendNotification")
     Call<Void> sendNotificationInChunks(@Body List<SendBulkNotificationRequest> sendBulkNotificationRequests);
+
+    @POST("/rest/3.0/createNotificationDefinition")
+    Call<NotificationResponse> createNotificationDefinition(@Body CreateTransactionalNotificationRequest createTransactionalNotificationRequest);
 }

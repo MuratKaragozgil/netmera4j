@@ -5,6 +5,7 @@ import netmera4j.constant.Platform;
 import netmera4j.model.notification.BulkMessage;
 import netmera4j.model.notification.SingleMessage;
 import netmera4j.model.notification.Target;
+import netmera4j.request.notification.CreateTransactionalNotificationRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
 import netmera4j.response.NotificationResponse;
@@ -31,6 +32,10 @@ public class NetmeraApiNotificationTest {
     private static final String TARGET_HOST = "http://nova.sdpaas.com";
     private static final Integer TRANSACTIONAL_NOTIFICATION_KEY = 4665;
 
+    // Message Parameters
+    private static final String TITLE = "title";
+    private static final String MESSAGE = "message";
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         NetmeraApiNotificationTest netmeraApiNotificationTest = new NetmeraApiNotificationTest();
 
@@ -41,40 +46,23 @@ public class NetmeraApiNotificationTest {
         completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testSendTransactionalNotification(completableFuture);
         completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testCreateTransactionalNotificationDefinition(completableFuture);
+        completableFuture.get();
     }
 
     private void testSendBasicBulkNotification(CompletableFuture completableFuture) {
         netmeraApi.sendRequest(SendBulkNotificationRequest.builder()
                 .message(BulkMessage.builder() //
-                        .title("Title") //
-                        .text("Sample Text") //
+                        .title(TITLE) //
+                        .text(MESSAGE) //
                         .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
                         .build()) //
                 .target(Target.builder() //
                         .sendToAll(true) //
                         .build()) //
-                .build(), new NetmeraCallBack<NotificationResponse>() {
-            @Override
-            protected void handleResponseCode(int httpStatus) {
-                logger.info("------------------------------------");
-                completableFuture.complete(httpStatus);
-            }
-
-            @Override
-            protected void handleResponseData(NotificationResponse data) {
-
-            }
-
-            @Override
-            protected void handleError(Response<NotificationResponse> response) {
-
-            }
-
-            @Override
-            protected void handleException(Exception t) {
-
-            }
-        });
+                .build(), getNotificationCallBack(completableFuture));
     }
 
     private void testSendTransactionalNotification(CompletableFuture completableFuture) {
@@ -86,6 +74,38 @@ public class NetmeraApiNotificationTest {
                         .extId(EXTERNAL_ID) //
                         .build()) //
                 .build(), getStandardCallBack(completableFuture));
+    }
+
+    private void testCreateTransactionalNotificationDefinition(CompletableFuture completableFuture) {
+        netmeraApi.sendRequest(CreateTransactionalNotificationRequest.builder() //
+                .title(TITLE) //
+                .message(MESSAGE) //
+                .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
+                .build(), getNotificationCallBack(completableFuture));
+    }
+
+    private NetmeraCallBack<NotificationResponse> getNotificationCallBack(CompletableFuture completableFuture) {
+        return new NetmeraCallBack<NotificationResponse>() {
+
+            @Override
+            protected void handleResponseCode(int httpStatus) {
+                logger.info("------------------------------------");
+                completableFuture.complete(httpStatus);
+            }
+
+            @Override
+            protected void handleResponseData(NotificationResponse data) {
+            }
+
+            @Override
+            protected void handleError(Response<NotificationResponse> response) {
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+                t.printStackTrace();
+            }
+        };
     }
 
     private NetmeraCallBack<Void> getStandardCallBack(CompletableFuture completableFuture) {
