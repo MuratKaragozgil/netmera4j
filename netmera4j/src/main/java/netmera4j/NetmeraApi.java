@@ -224,4 +224,21 @@ public class NetmeraApi implements Netmera {
         Call<GetPushStatsInDateRangeResponse> call = notificationService.getPushStatsInDateRange(getPushStatsInDateRangeRequest.getStartDate(), getPushStatsInDateRangeRequest.getEndDate());
         call.enqueue(callBack);
     }
+
+    @Override
+    public void sendRequest(GetPushResultsRequest getPushResultsRequest, NetmeraCallBack<GetPushResultResponse> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", getPushResultsRequest);
+        Call<GetPushResultResponse> call = notificationService.getPushResults(getPushResultsRequest.getMax(), getPushResultsRequest.getNotificationKey(), //
+                getPushResultsRequest.getExtId(), getPushResultsRequest.getStart(), getPushResultsRequest.getEnd(), getPushResultsRequest.getToken());
+        call.enqueue(callBack);
+    }
+
+    @Override
+    public void sendRequest(GetPushResultResponse getPushResultResponse, NetmeraCallBack<GetPushResultResponse> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", getPushResultResponse.getNextPage());
+        Call<GetPushResultResponse> call = notificationService.getPushResults(getPushResultResponse.getNextPage());
+        call.enqueue(callBack);
+    }
 }

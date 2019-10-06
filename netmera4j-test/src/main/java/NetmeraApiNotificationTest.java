@@ -6,6 +6,7 @@ import netmera4j.model.notification.BulkMessage;
 import netmera4j.model.notification.SingleMessage;
 import netmera4j.model.notification.Target;
 import netmera4j.request.notification.*;
+import netmera4j.response.GetPushResultResponse;
 import netmera4j.response.GetPushStatsInDateRangeResponse;
 import netmera4j.response.GetPushStatsResponse;
 import netmera4j.response.NotificationResponse;
@@ -39,7 +40,7 @@ public class NetmeraApiNotificationTest {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         NetmeraApiNotificationTest netmeraApiNotificationTest = new NetmeraApiNotificationTest();
 
-        CompletableFuture completableFuture = new CompletableFuture();
+         CompletableFuture completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testSendBasicBulkNotification(completableFuture);
         completableFuture.get();
 
@@ -57,6 +58,10 @@ public class NetmeraApiNotificationTest {
 
         completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testGetPushStatsInDateRange(completableFuture);
+        completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testGetPushResults(completableFuture);
         completableFuture.get();
     }
 
@@ -132,6 +137,31 @@ public class NetmeraApiNotificationTest {
 
             @Override
             protected void handleError(Response<GetPushStatsInDateRangeResponse> response) {
+
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+
+            }
+        });
+    }
+
+    private void testGetPushResults(CompletableFuture completableFuture) {
+        netmeraApi.sendRequest(GetPushResultsRequest.builder().notificationKey(TRANSACTIONAL_NOTIFICATION_KEY).extId(EXTERNAL_ID).build(), new NetmeraCallBack<GetPushResultResponse>() {
+            @Override
+            protected void handleResponseCode(int httpStatus) {
+                logger.info("------------------------------------");
+                completableFuture.complete(httpStatus);
+            }
+
+            @Override
+            protected void handleResponseData(GetPushResultResponse data) {
+
+            }
+
+            @Override
+            protected void handleError(Response<GetPushResultResponse> response) {
 
             }
 
