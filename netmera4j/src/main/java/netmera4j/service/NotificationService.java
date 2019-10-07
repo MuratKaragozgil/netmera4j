@@ -1,5 +1,6 @@
 package netmera4j.service;
 
+import netmera4j.request.notification.CreateGeofenceRequest;
 import netmera4j.request.notification.CreateTransactionalNotificationRequest;
 import netmera4j.request.notification.SendBulkNotificationRequest;
 import netmera4j.request.notification.SendTransactionalNotificationRequest;
@@ -37,8 +38,12 @@ public interface NotificationService {
 
     @GET("/rest/3.0/getPushResult")
     Call<GetPushResultResponse> getPushResults(@Query("max") Integer max, @Query("notificationKey") Integer notificationKey, //
-                                               @Query("extId") String extId, @Query("start") Long startDate, @Query("end") Long endDate, @Query("token") String token);
+                                               @Query("extId") String extId, @Query("start") Long startDate, //
+                                               @Query("end") Long endDate, @Query("token") String token);
 
     @GET
     Call<GetPushResultResponse> getPushResults(@Url String url);
+
+    @POST("/rest/3.0/geofence/add")
+    Call<Void> createGeofence(@Body CreateGeofenceRequest createGeofenceRequest);
 }

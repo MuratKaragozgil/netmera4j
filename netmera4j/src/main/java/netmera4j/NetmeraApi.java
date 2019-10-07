@@ -241,4 +241,12 @@ public class NetmeraApi implements Netmera {
         Call<GetPushResultResponse> call = notificationService.getPushResults(getPushResultResponse.getNextPage());
         call.enqueue(callBack);
     }
+
+    @Override
+    public void sendRequest(CreateGeofenceRequest createGeofenceRequest, NetmeraCallBack<Void> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", createGeofenceRequest);
+        Call<Void> call = notificationService.createGeofence(createGeofenceRequest);
+        call.enqueue(callBack);
+    }
 }

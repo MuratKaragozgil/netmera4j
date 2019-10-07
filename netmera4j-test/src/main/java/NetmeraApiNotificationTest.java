@@ -2,6 +2,7 @@ import netmera4j.Netmera;
 import netmera4j.NetmeraApi;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.constant.Platform;
+import netmera4j.constant.RadiusUnit;
 import netmera4j.constant.TargetCondition;
 import netmera4j.model.notification.AdvanceTarget;
 import netmera4j.model.notification.BasicTarget;
@@ -83,6 +84,10 @@ public class NetmeraApiNotificationTest {
         completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testSendTransactionalNotification(completableFuture);
         completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testCreateGeofence(completableFuture);
+        completableFuture.get();
     }
 
     private void testSendBasicBulkNotificationToSendToAll(CompletableFuture completableFuture) {
@@ -141,6 +146,10 @@ public class NetmeraApiNotificationTest {
                 .message(MESSAGE) //
                 .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
                 .build(), getNotificationCallBack(completableFuture));
+    }
+
+    private void testCreateGeofence(CompletableFuture completableFuture) {
+        netmeraApi.sendRequest(CreateGeofenceRequest.builder().title(TITLE).latitude(12d).longitude(12d).radius(10).unit(RadiusUnit.KM).build(), getStandardCallBack(completableFuture));
     }
 
     private void testGetPushStats(CompletableFuture completableFuture) {

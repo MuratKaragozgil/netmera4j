@@ -66,4 +66,6 @@ public interface Netmera {
     void sendRequest(GetPushResultsRequest getPushResultsRequest, NetmeraCallBack<GetPushResultResponse> callBack);
 
     void sendRequest(GetPushResultResponse getPushResultResponse, NetmeraCallBack<GetPushResultResponse> callBack);
+
+    void sendRequest(CreateGeofenceRequest createGeofenceRequest, NetmeraCallBack<Void> callBack);
 }
