@@ -14,7 +14,7 @@ import java.util.Map;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class SingleMessage {
+public class SingleMessage extends Message {
     private Map<String, Object> params;
 
     public SingleMessage addParameter(String key, Object value) {

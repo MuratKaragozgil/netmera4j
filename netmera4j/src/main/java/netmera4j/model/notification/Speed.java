@@ -11,7 +11,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ClickAction {
-    private String url;
-    private boolean doNothing;
+public class Speed {
+    private Integer intervalMins;
+    private Integer packetSize;
 }

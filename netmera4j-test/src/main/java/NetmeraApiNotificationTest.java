@@ -2,9 +2,11 @@ import netmera4j.Netmera;
 import netmera4j.NetmeraApi;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.constant.Platform;
+import netmera4j.constant.TargetCondition;
+import netmera4j.model.notification.AdvanceTarget;
+import netmera4j.model.notification.BasicTarget;
 import netmera4j.model.notification.BulkMessage;
 import netmera4j.model.notification.SingleMessage;
-import netmera4j.model.notification.Target;
 import netmera4j.request.notification.*;
 import netmera4j.response.GetPushResultResponse;
 import netmera4j.response.GetPushStatsInDateRangeResponse;
@@ -33,6 +35,8 @@ public class NetmeraApiNotificationTest {
     private static final String TARGET_HOST = "http://nova.sdpaas.com";
     private static final Integer TRANSACTIONAL_NOTIFICATION_KEY = 4665;
 
+    private static final String TAG_NAME = "NETMERA4J_TAG";
+
     // Message Parameters
     private static final String TITLE = "title";
     private static final String MESSAGE = "message";
@@ -40,7 +44,7 @@ public class NetmeraApiNotificationTest {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         NetmeraApiNotificationTest netmeraApiNotificationTest = new NetmeraApiNotificationTest();
 
-         CompletableFuture completableFuture = new CompletableFuture();
+        CompletableFuture completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testSendBasicBulkNotification(completableFuture);
         completableFuture.get();
 
@@ -63,17 +67,59 @@ public class NetmeraApiNotificationTest {
         completableFuture = new CompletableFuture();
         netmeraApiNotificationTest.testGetPushResults(completableFuture);
         completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testSendBasicBulkNotificationToSendToAll(completableFuture);
+        completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testSendAdvancedBulkNotificationToTagList(completableFuture);
+        completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testSendBasicBulkNotification(completableFuture);
+        completableFuture.get();
+
+        completableFuture = new CompletableFuture();
+        netmeraApiNotificationTest.testSendTransactionalNotification(completableFuture);
+        completableFuture.get();
+    }
+
+    private void testSendBasicBulkNotificationToSendToAll(CompletableFuture completableFuture) {
+        netmeraApi.sendRequest(SendBulkNotificationRequest.builder()
+                .message(BulkMessage.builder() //
+                        .title(TITLE) //
+                        .text("testSendBasicBulkNotificationToSendToAll") //
+                        .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
+                        .build()) //
+                .target(new BasicTarget.BasicTargetBuilder() //
+                        .sendToAll(true) //
+                        .build()) //
+                .build(), getNotificationCallBack(completableFuture));
+    }
+
+    private void testSendAdvancedBulkNotificationToTagList(CompletableFuture completableFuture) {
+        netmeraApi.sendRequest(SendBulkNotificationRequest.builder()
+                .message(BulkMessage.builder() //
+                        .title(TITLE) //
+                        .text("testSendAdvancedBulkNotificationToTagList") //
+                        .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
+                        .build()) //
+                .target(new AdvanceTarget.AdvanceTargetBuilder() //
+                        .addTag(TargetCondition.AND, Arrays.asList("NETMERA4J_TAG", "NETMERA4J_TAG_2"))
+                        .build()) //
+                .build(), getNotificationCallBack(completableFuture));
     }
 
     private void testSendBasicBulkNotification(CompletableFuture completableFuture) {
         netmeraApi.sendRequest(SendBulkNotificationRequest.builder()
                 .message(BulkMessage.builder() //
                         .title(TITLE) //
-                        .text(MESSAGE) //
+                        .text("testSendBasicBulkNotification") //
                         .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
                         .build()) //
-                .target(Target.builder() //
-                        .sendToAll(true) //
+                .target(new BasicTarget.BasicTargetBuilder()
+                        .addTag(TAG_NAME)//
                         .build()) //
                 .build(), getNotificationCallBack(completableFuture));
     }
@@ -81,10 +127,10 @@ public class NetmeraApiNotificationTest {
     private void testSendTransactionalNotification(CompletableFuture completableFuture) {
         netmeraApi.sendRequest(SendTransactionalNotificationRequest.builder() //
                 .message(SingleMessage.builder().build() //
-                        .addParameter("customMessage", "Thanks!!!")) //
+                        .addParameter("customMessage", "testSendTransactionalNotification")) //
                 .notificationKey(TRANSACTIONAL_NOTIFICATION_KEY.toString()) //
-                .target(Target.builder() //
-                        .extId(EXTERNAL_ID) //
+                .target(new BasicTarget.BasicTargetBuilder() //
+                        .externalId(EXTERNAL_ID) //
                         .build()) //
                 .build(), getStandardCallBack(completableFuture));
     }

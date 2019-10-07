@@ -1,5 +1,7 @@
 package netmera4j.constant;
 
+import java.util.Arrays;
+
 /**
  * @author Murat Karagözgil
  */
@@ -18,13 +20,9 @@ public enum Platform {
     }
 
     public static Platform getPlatform(String name) {
-        String nameUpper = name.toUpperCase();
-        for (Platform value : values()) {
-            if (value.name().equals(nameUpper)) {
-                return value;
-            }
-        }
-
-        throw new IllegalArgumentException("Unknown platform identifier. [" + name + "]");
+        return Arrays.stream(values())
+                .filter(bl -> bl.name.equalsIgnoreCase(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown platform identifier. [" + name + "]"));
     }
 }

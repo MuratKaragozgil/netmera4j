@@ -17,4 +17,5 @@ public class MediaSettings {
     private String subtitle;
     private String sound;
     private boolean vibration;
+    private boolean badge;
 }

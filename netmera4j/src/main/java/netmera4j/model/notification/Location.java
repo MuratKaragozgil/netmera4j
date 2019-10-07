@@ -11,7 +11,8 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ClickAction {
-    private String url;
-    private boolean doNothing;
+public class Location {
+    private Double latitude;
+    private Double longitude;
+    private Integer radius;
 }

@@ -1,6 +1,9 @@
 package netmera4j.model.notification;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import netmera4j.constant.Platform;
 import netmera4j.util.NotEmpty;
 
@@ -13,15 +16,15 @@ import java.util.List;
 @Setter
 @Builder
 @ToString
-@AllArgsConstructor
-@RequiredArgsConstructor
-public class BulkMessage {
+public class BulkMessage extends Message {
     @NotEmpty
     private String title;
     @NotEmpty
     private String text;
     @NotEmpty
     private List<Platform> platforms;
+    private Schedule schedule;
+    private Speed speed;
     /**
      * Web Push fields
      */
