@@ -3,8 +3,10 @@ package netmera4j;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.exception.NetmeraError;
 import netmera4j.request.device.*;
+import netmera4j.request.event.FireEventsRequest;
 import netmera4j.request.notification.*;
 import netmera4j.response.*;
+import netmera4j.service.EventService;
 import netmera4j.service.NotificationService;
 import netmera4j.service.UserService;
 import netmera4j.util.NetmeraProxy;
@@ -17,7 +19,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static netmera4j.constant.NetmeraApiContants.NETMERA_HEADER_KEY;
@@ -28,6 +32,7 @@ import static netmera4j.constant.NetmeraApiContants.NETMERA_HEADER_KEY;
 public class NetmeraApi implements Netmera {
 
     private UserService userService;
+    private EventService eventService;
     private NotificationService notificationService;
     private Converter<ResponseBody, NetmeraError> errorConverter;
 
@@ -50,6 +55,7 @@ public class NetmeraApi implements Netmera {
         errorConverter = retrofit.responseBodyConverter(NetmeraError.class, new Annotation[0]);
 
         userService = retrofit.create(UserService.class);
+        eventService = retrofit.create(EventService.class);
         notificationService = retrofit.create(NotificationService.class);
     }
 
@@ -247,6 +253,16 @@ public class NetmeraApi implements Netmera {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", createGeofenceRequest);
         Call<Void> call = notificationService.createGeofence(createGeofenceRequest);
+        call.enqueue(callBack);
+    }
+
+    @Override
+    public void sendRequest(FireEventsRequest fireEventsRequest, NetmeraCallBack<Void> callBack) {
+        callBack.setErrorConverter(errorConverter);
+        logger.debug("SendRequest::started::request::{}", fireEventsRequest.getEventList());
+        List<Map<String, Object>> eventData = new ArrayList<>(fireEventsRequest.getEventList().size());
+        fireEventsRequest.getEventList().forEach(e -> eventData.add(e.getParameters()));
+        Call<Void> call = eventService.fireEvent(eventData);
         call.enqueue(callBack);
     }
 }

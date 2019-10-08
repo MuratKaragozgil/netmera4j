@@ -2,6 +2,8 @@ package netmera4j;
 
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.request.device.*;
+import netmera4j.request.event.FireEventsRequest;
+import netmera4j.request.event.SingleEvent;
 import netmera4j.request.notification.*;
 import netmera4j.response.*;
 import org.slf4j.Logger;
@@ -68,4 +70,6 @@ public interface Netmera {
     void sendRequest(GetPushResultResponse getPushResultResponse, NetmeraCallBack<GetPushResultResponse> callBack);
 
     void sendRequest(CreateGeofenceRequest createGeofenceRequest, NetmeraCallBack<Void> callBack);
+
+    void sendRequest(FireEventsRequest fireEventsRequest, NetmeraCallBack<Void> callBack);
 }
