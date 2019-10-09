@@ -1,5 +1,7 @@
 package netmera4j;
 
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.RetryPolicy;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.exception.NetmeraError;
 import netmera4j.request.device.*;
@@ -19,6 +21,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.lang.annotation.Annotation;
+import java.net.SocketException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +46,23 @@ public class NetmeraApi implements Netmera {
         httpClient.readTimeout(30, TimeUnit.SECONDS);
         // TODO maybe implement other features
 
-        httpClient.addInterceptor(chain -> {
+        RetryPolicy<okhttp3.Response> retryPolicy = new RetryPolicy<okhttp3.Response>()
+                .handle(SocketException.class)
+                .handleResultIf(result -> result.code() > 499)
+                .withBackoff(2, 10, ChronoUnit.SECONDS)
+                .onFailedAttempt(e -> logger.error("Failed Attempt!::{}", e.getLastResult().code()))
+                .withMaxRetries(5);
+
+        httpClient.interceptors().add(chain -> {
             Request request = chain.request().newBuilder().addHeader(NETMERA_HEADER_KEY, apiKey).build();
-            return chain.proceed(request);
+            // try the request
+            okhttp3.Response response = chain.proceed(request);
+            if (response.code() > 499) {
+                // retry the request
+                response = Failsafe.with(retryPolicy).get(() -> chain.proceed(request));
+            }
+            // otherwise just pass the original response on
+            return response;
         });
 
         Retrofit retrofit = new Retrofit.Builder()

@@ -52,7 +52,7 @@ public abstract class NetmeraCallBack<T> implements Callback<T> {
                 logger.error("ResponseError::{}", response);
             }
 
-            if (response.code() == 404) {
+            if (response.code() > 499) {
                 retryRequest(call);
             }
 
@@ -75,7 +75,6 @@ public abstract class NetmeraCallBack<T> implements Callback<T> {
     @Override
     public void onFailure(Call<T> call, Throwable t) {
         this.call = call;
-        retryRequest(call);
         if (t instanceof Exception) {
             logger.error("ResponseException::{}", t.getMessage());
             handleException((Exception) t);
@@ -90,6 +89,6 @@ public abstract class NetmeraCallBack<T> implements Callback<T> {
     }
 
     private void retry() {
-        call.clone().enqueue(this);
+//        call.clone().enqueue(this);
     }
 }
