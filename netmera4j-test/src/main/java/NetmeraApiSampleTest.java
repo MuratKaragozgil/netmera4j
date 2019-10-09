@@ -1,12 +1,14 @@
 import netmera4j.Netmera;
 import netmera4j.NetmeraApi;
 import netmera4j.callback.NetmeraCallBack;
+import netmera4j.model.api.NetmeraRetryPolicy;
 import netmera4j.request.device.GetUserDevicesRequest;
 import netmera4j.response.GetUserDevicesResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Response;
 
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -26,6 +28,7 @@ public class NetmeraApiSampleTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         NetmeraApiSampleTest netmeraApiDeviceTest = new NetmeraApiSampleTest();
+        netmeraApiDeviceTest.netmeraApi.setRetryPolicy(NetmeraRetryPolicy.builder().delay(30).maxDelay(60).unit(ChronoUnit.SECONDS).build());
 
         // DEVICE
         CompletableFuture completableFuture = new CompletableFuture();

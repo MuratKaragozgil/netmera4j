@@ -4,6 +4,7 @@ import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.RetryPolicy;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.exception.NetmeraError;
+import netmera4j.model.api.NetmeraRetryPolicy;
 import netmera4j.request.device.*;
 import netmera4j.request.event.FireEventsRequest;
 import netmera4j.request.notification.*;
@@ -40,18 +41,22 @@ public class NetmeraApi implements Netmera {
     private NotificationService notificationService;
     private Converter<ResponseBody, NetmeraError> errorConverter;
 
+    private NetmeraRetryPolicy netmeraRetryPolicy = new NetmeraRetryPolicy();
+    private RetryPolicy<okhttp3.Response> retryPolicy;
+    private int maxRetryCount = 3;
+
     private NetmeraApi(String targetHost, String apiKey) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(30, TimeUnit.SECONDS);
         httpClient.readTimeout(30, TimeUnit.SECONDS);
         // TODO maybe implement other features
 
-        RetryPolicy<okhttp3.Response> retryPolicy = new RetryPolicy<okhttp3.Response>()
+        this.retryPolicy = new RetryPolicy<okhttp3.Response>()
                 .handle(SocketException.class)
                 .handleResultIf(result -> result.code() > 499)
-                .withBackoff(2, 10, ChronoUnit.SECONDS)
+                .withBackoff(netmeraRetryPolicy.getDelay(), netmeraRetryPolicy.getMaxDelay(), netmeraRetryPolicy.getUnit())
                 .onFailedAttempt(e -> logger.error("Failed Attempt!::{}", e.getLastResult().code()))
-                .withMaxRetries(5);
+                .withMaxRetries(maxRetryCount);
 
         httpClient.interceptors().add(chain -> {
             Request request = chain.request().newBuilder().addHeader(NETMERA_HEADER_KEY, apiKey).build();
@@ -70,11 +75,22 @@ public class NetmeraApi implements Netmera {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
-        errorConverter = retrofit.responseBodyConverter(NetmeraError.class, new Annotation[0]);
 
+        errorConverter = retrofit.responseBodyConverter(NetmeraError.class, new Annotation[0]);
         userService = retrofit.create(UserService.class);
         eventService = retrofit.create(EventService.class);
         notificationService = retrofit.create(NotificationService.class);
+    }
+
+    // TODO write builder class
+    @Override
+    public void setRetryPolicy(NetmeraRetryPolicy netmeraRetryPolicy) {
+        this.netmeraRetryPolicy =  netmeraRetryPolicy;
+    }
+
+    @Override
+    public void setMaxRetryCount(int maxRetryCount) {
+        this.maxRetryCount = maxRetryCount;
     }
 
     public static Netmera Build(String targetHost, String apiKey) {
