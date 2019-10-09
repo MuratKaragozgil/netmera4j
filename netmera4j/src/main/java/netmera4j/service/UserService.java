@@ -1,9 +1,6 @@
 package netmera4j.service;
 
-import netmera4j.model.device.Category;
-import netmera4j.model.device.NewDevice;
-import netmera4j.model.device.UserAndProfileAttributeList;
-import netmera4j.model.device.UserAndProfileAttributeMap;
+import netmera4j.model.device.*;
 import netmera4j.request.device.*;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
@@ -46,7 +43,7 @@ public interface UserService {
     Call<Void> setProfileAttributes(@Body List<UserAndProfileAttributeMap> userAndProfileAttributeMaps);
 
     @POST("/rest/3.0/unsetProfileAttributes")
-    Call<Void> unsetProfileAttributes(@Body List<UserAndProfileAttributeList> userAndProfileAttributeLists);
+    Call<Void> unsetProfileAttributes(@Body List<SingleUnsetObject> userAndProfileAttributeLists);
 
     @GET("/rest/3.0/getProfileAttributes")
     Call<GetProfileAttributesResponse> getProfileAttributes(@Query("extId") String externalId);

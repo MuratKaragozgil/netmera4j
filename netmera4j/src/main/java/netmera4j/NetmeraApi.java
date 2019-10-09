@@ -129,7 +129,7 @@ public class NetmeraApi implements Netmera {
     public void sendRequest(UnsetProfileAttributesRequest unsetProfileAttributesRequest, NetmeraCallBack<Void> callBack) {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", unsetProfileAttributesRequest);
-        Call<Void> call = userService.unsetProfileAttributes(unsetProfileAttributesRequest.getUserAndProfileAttributeLists());
+        Call<Void> call = userService.unsetProfileAttributes(unsetProfileAttributesRequest.getSingleUnsetObjects());
         call.enqueue(callBack);
     }
 

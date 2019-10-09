@@ -2,10 +2,7 @@ import netmera4j.Netmera;
 import netmera4j.NetmeraApi;
 import netmera4j.callback.NetmeraCallBack;
 import netmera4j.constant.Platform;
-import netmera4j.model.device.Category;
-import netmera4j.model.device.NewDevice;
-import netmera4j.model.device.UserAndProfileAttributeList;
-import netmera4j.model.device.UserAndProfileAttributeMap;
+import netmera4j.model.device.*;
 import netmera4j.request.device.*;
 import netmera4j.response.GetDeviceTokensResponse;
 import netmera4j.response.GetProfileAttributesResponse;
@@ -242,9 +239,9 @@ public class NetmeraApiDeviceTest {
 
     private void testUnsetProfileAttributes(CompletableFuture completableFuture) {
         UnsetProfileAttributesRequest unsetProfileAttributesRequest = new UnsetProfileAttributesRequest();
-        List<UserAndProfileAttributeList> userAndProfileAttributeLists = new ArrayList<>();
-        userAndProfileAttributeLists.add(UserAndProfileAttributeList.builder().extId(EXTERNAL_ID).build().addProfileAttributeArray(PROFILE_ATTRIBUTE_NAME, Collections.singletonList(PROFILE_ATTRIBUTE_VALUE)));
-        unsetProfileAttributesRequest.setUserAndProfileAttributeLists(userAndProfileAttributeLists);
+        List<SingleUnsetObject> singleUnsetObjects = new ArrayList<>();
+        singleUnsetObjects.add(SingleUnsetObject.builder().extId(EXTERNAL_ID).profile(Collections.singletonList(PROFILE_ATTRIBUTE_VALUE)).build());
+        unsetProfileAttributesRequest.setSingleUnsetObjects(singleUnsetObjects);
         netmeraApi.sendRequest(unsetProfileAttributesRequest, getStandardCallBack(completableFuture));
     }
 
