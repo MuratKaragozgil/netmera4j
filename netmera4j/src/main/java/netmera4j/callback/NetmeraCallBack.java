@@ -6,7 +6,10 @@ import netmera4j.exception.NetmeraError;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit2.*;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Converter;
+import retrofit2.Response;
 
 import java.io.IOException;
 
@@ -44,11 +47,15 @@ public abstract class NetmeraCallBack<T> implements Callback<T> {
                     NetmeraError error = errorConverter.convert(response.errorBody());
                     logger.error("ResponseError::{}", error);
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             } else {
                 logger.error("ResponseError::{}", response);
             }
+
+            if (response.code() == 404) {
+                retryRequest(call);
+            }
+
             handleError(response);
         }
         logger.info("ResponseCode::{}", response.code());
@@ -68,15 +75,17 @@ public abstract class NetmeraCallBack<T> implements Callback<T> {
     @Override
     public void onFailure(Call<T> call, Throwable t) {
         this.call = call;
-        if (retryCount++ < TOTAL_RETRIES) {
-            // TODO log here
-            retry();
-        }
+        retryRequest(call);
         if (t instanceof Exception) {
             logger.error("ResponseException::{}", t.getMessage());
             handleException((Exception) t);
-        } else {
-            // TODO do something useful
+        }
+    }
+
+    private void retryRequest(Call<T> call) {
+        if (retryCount++ < TOTAL_RETRIES) {
+            logger.info("Request retry!::request::{}", call.request());
+            retry();
         }
     }
 
