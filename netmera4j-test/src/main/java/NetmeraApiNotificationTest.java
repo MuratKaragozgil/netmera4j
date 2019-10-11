@@ -28,7 +28,7 @@ public class NetmeraApiNotificationTest {
 
     private Logger logger = LoggerFactory.getLogger(NetmeraApiDeviceTest.class);
 
-    private Netmera netmeraApi = NetmeraApi.Build(TARGET_HOST, API_KEY);
+    private Netmera netmeraApi = new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, API_KEY).withMaxRetryCount(10).withReadTimeout(30).build();
 
     private static final String EXTERNAL_ID = "murat1";
     private static final String TOKEN = "token1";

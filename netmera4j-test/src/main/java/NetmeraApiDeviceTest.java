@@ -22,12 +22,15 @@ public class NetmeraApiDeviceTest {
 
     private Logger logger = LoggerFactory.getLogger(NetmeraApiDeviceTest.class);
 
-    private Netmera netmeraApi = NetmeraApi.Build(TARGET_HOST, API_KEY);
+    private Netmera netmeraApi = new NetmeraApi.NetmeraApiBuilder(PROD_TARGET_HOST, PROD_API_KEY).build();
 
     private static final String EXTERNAL_ID = "murat1";
     private static final String TOKEN = "token1";
     private static final String API_KEY = "N79vhZlSKZD5upipyh7NdHIgPOIassVYRRAdPjga2sv00ORK4DHaBg";
     private static final String TARGET_HOST = "http://nova.sdpaas.com";
+
+    private static final String PROD_API_KEY = "N79vhZlSKZC3YPJNg9Y3Q8V7WAsTY8qXMNJ-IR07I5t0pNtIaTgHcw";
+    private static final String PROD_TARGET_HOST = "http://restapi.netmera.com";
 
     private static final String TAG_NAME = "NETMERA4J_TAG";
     private static final List<String> EXTERNAL_ID_LIST = Arrays.asList("murat1", "murat2", "murat3");

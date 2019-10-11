@@ -19,7 +19,7 @@ public class NetmeraApiSampleTest {
 
     private Logger logger = LoggerFactory.getLogger(NetmeraApiDeviceTest.class);
 
-    private Netmera netmeraApi = NetmeraApi.Build(TARGET_HOST, API_KEY);
+    private Netmera netmeraApi = new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, API_KEY).withNetmeraRetryPolicy(NetmeraRetryPolicy.builder().delay(2).maxDelay(10).unit(ChronoUnit.SECONDS).build()).build();
 
     private static final String EXTERNAL_ID = "murat1";
     private static final String TOKEN = "token1";
@@ -28,7 +28,6 @@ public class NetmeraApiSampleTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         NetmeraApiSampleTest netmeraApiDeviceTest = new NetmeraApiSampleTest();
-        netmeraApiDeviceTest.netmeraApi.setRetryPolicy(NetmeraRetryPolicy.builder().delay(30).maxDelay(60).unit(ChronoUnit.SECONDS).build());
 
         // DEVICE
         CompletableFuture completableFuture = new CompletableFuture();

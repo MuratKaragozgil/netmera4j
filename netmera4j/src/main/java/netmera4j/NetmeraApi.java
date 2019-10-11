@@ -23,7 +23,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.lang.annotation.Annotation;
 import java.net.SocketException;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,17 +40,20 @@ public class NetmeraApi implements Netmera {
     private NotificationService notificationService;
     private Converter<ResponseBody, NetmeraError> errorConverter;
 
-    private NetmeraRetryPolicy netmeraRetryPolicy = new NetmeraRetryPolicy();
-    private RetryPolicy<okhttp3.Response> retryPolicy;
-    private int maxRetryCount = 3;
+    private final String TARGET_HOST;
 
-    private NetmeraApi(String targetHost, String apiKey) {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(30, TimeUnit.SECONDS);
-        httpClient.readTimeout(30, TimeUnit.SECONDS);
-        // TODO maybe implement other features
+    private OkHttpClient.Builder httpClient;
+    private int connectionTimeout, readTimeout, writeTimeout, callTimeout;
 
-        this.retryPolicy = new RetryPolicy<okhttp3.Response>()
+    private NetmeraApi(String targetHost, String apiKey, NetmeraRetryPolicy netmeraRetryPolicy, Integer maxRetryCount) {
+        httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(connectionTimeout, TimeUnit.SECONDS);
+        httpClient.readTimeout(readTimeout, TimeUnit.SECONDS);
+        httpClient.writeTimeout(writeTimeout, TimeUnit.SECONDS);
+        httpClient.callTimeout(callTimeout, TimeUnit.SECONDS);
+        this.TARGET_HOST = targetHost;
+
+        RetryPolicy<okhttp3.Response> retryPolicy = new RetryPolicy<okhttp3.Response>()
                 .handle(SocketException.class)
                 .handleResultIf(result -> result.code() > 499)
                 .withBackoff(netmeraRetryPolicy.getDelay(), netmeraRetryPolicy.getMaxDelay(), netmeraRetryPolicy.getUnit())
@@ -69,9 +71,11 @@ public class NetmeraApi implements Netmera {
             // otherwise just pass the original response on
             return response;
         });
+    }
 
+    private void connect() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(targetHost)
+                .baseUrl(TARGET_HOST)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
@@ -80,21 +84,6 @@ public class NetmeraApi implements Netmera {
         userService = retrofit.create(UserService.class);
         eventService = retrofit.create(EventService.class);
         notificationService = retrofit.create(NotificationService.class);
-    }
-
-    // TODO write builder class
-    @Override
-    public void setRetryPolicy(NetmeraRetryPolicy netmeraRetryPolicy) {
-        this.netmeraRetryPolicy =  netmeraRetryPolicy;
-    }
-
-    @Override
-    public void setMaxRetryCount(int maxRetryCount) {
-        this.maxRetryCount = maxRetryCount;
-    }
-
-    public static Netmera Build(String targetHost, String apiKey) {
-        return NetmeraProxy.newInstance(new NetmeraApi(targetHost, apiKey));
     }
 
     public void sendRequest(AddNewDevicesRequest addNewDevicesRequest, NetmeraCallBack<Void> callBack) {
@@ -298,5 +287,62 @@ public class NetmeraApi implements Netmera {
         fireEventsRequest.getEventList().forEach(e -> eventData.add(e.getParameters()));
         Call<Void> call = eventService.fireEvent(eventData);
         call.enqueue(callBack);
+    }
+
+    public static final class NetmeraApiBuilder {
+        private NetmeraRetryPolicy netmeraRetryPolicy = new NetmeraRetryPolicy();
+        private int maxRetryCount = 3;
+        private String targetHost;
+        private String apiKey;
+        private int connectionTimeout = 30, readTimeout = 30, writeTimeout = 30, callTimeout = 30;
+
+        public NetmeraApiBuilder(String targetHost, String apiKey) {
+            this.targetHost = targetHost;
+            this.apiKey = apiKey;
+        }
+
+        public static NetmeraApiBuilder NetmeraApi(String targetHost, String apiKey) {
+            return new NetmeraApiBuilder(targetHost, apiKey);
+        }
+
+        public NetmeraApiBuilder withNetmeraRetryPolicy(NetmeraRetryPolicy netmeraRetryPolicy) {
+            this.netmeraRetryPolicy = netmeraRetryPolicy;
+            return this;
+        }
+
+        public NetmeraApiBuilder withReadTimeout(int readTimeout) {
+            this.readTimeout = readTimeout;
+            return this;
+        }
+
+        public NetmeraApiBuilder withConnectionTimeout(int connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public NetmeraApiBuilder withWriteTimeout(int writeTimeout) {
+            this.writeTimeout = writeTimeout;
+            return this;
+        }
+
+        public NetmeraApiBuilder withCallTimeout(int callTimeout) {
+            this.callTimeout = callTimeout;
+            return this;
+        }
+
+        public NetmeraApiBuilder withMaxRetryCount(int maxRetryCount) {
+            this.maxRetryCount = maxRetryCount;
+            return this;
+        }
+
+        public Netmera build() {
+            NetmeraApi netmeraApi = new NetmeraApi(targetHost, apiKey, netmeraRetryPolicy, maxRetryCount);
+            netmeraApi.callTimeout = this.callTimeout;
+            netmeraApi.readTimeout = this.readTimeout;
+            netmeraApi.writeTimeout = this.writeTimeout;
+            netmeraApi.connectionTimeout = this.connectionTimeout;
+            netmeraApi.connect();
+            return NetmeraProxy.newInstance(netmeraApi);
+        }
     }
 }

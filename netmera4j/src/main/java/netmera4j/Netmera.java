@@ -1,7 +1,6 @@
 package netmera4j;
 
 import netmera4j.callback.NetmeraCallBack;
-import netmera4j.model.api.NetmeraRetryPolicy;
 import netmera4j.request.device.*;
 import netmera4j.request.event.FireEventsRequest;
 import netmera4j.request.notification.*;
@@ -17,10 +16,6 @@ import java.util.List;
 public interface Netmera {
 
     Logger logger = LoggerFactory.getLogger(Netmera.class);
-
-    void setRetryPolicy(NetmeraRetryPolicy netmeraRetryPolicy);
-
-    void setMaxRetryCount(int maxRetryCount);
 
     void sendRequest(AddNewDevicesRequest addNewDevicesRequest, NetmeraCallBack<Void> callBack);
 
