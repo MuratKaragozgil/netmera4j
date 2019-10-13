@@ -12,7 +12,9 @@ import netmera4j.response.*;
 import netmera4j.service.EventService;
 import netmera4j.service.NotificationService;
 import netmera4j.service.UserService;
+import netmera4j.util.Assert;
 import netmera4j.util.NetmeraProxy;
+import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -43,15 +45,18 @@ public class NetmeraApi implements Netmera {
     private final String TARGET_HOST;
 
     private OkHttpClient.Builder httpClient;
+    private ConnectionPool connectionPool = new ConnectionPool();
     private int connectionTimeout, readTimeout, writeTimeout, callTimeout;
 
-    private NetmeraApi(String targetHost, String apiKey, NetmeraRetryPolicy netmeraRetryPolicy, Integer maxRetryCount) {
+    private NetmeraApi(String targetHost, String restApiKey, NetmeraRetryPolicy netmeraRetryPolicy, Integer maxRetryCount) {
+        this.TARGET_HOST = targetHost;
+
         httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(connectionTimeout, TimeUnit.SECONDS);
         httpClient.readTimeout(readTimeout, TimeUnit.SECONDS);
         httpClient.writeTimeout(writeTimeout, TimeUnit.SECONDS);
         httpClient.callTimeout(callTimeout, TimeUnit.SECONDS);
-        this.TARGET_HOST = targetHost;
+        httpClient.connectionPool(connectionPool);
 
         RetryPolicy<okhttp3.Response> retryPolicy = new RetryPolicy<okhttp3.Response>()
                 .handle(SocketException.class)
@@ -61,7 +66,7 @@ public class NetmeraApi implements Netmera {
                 .withMaxRetries(maxRetryCount);
 
         httpClient.interceptors().add(chain -> {
-            Request request = chain.request().newBuilder().addHeader(NETMERA_HEADER_KEY, apiKey).build();
+            Request request = chain.request().newBuilder().addHeader(NETMERA_HEADER_KEY, restApiKey).build();
             // try the request
             okhttp3.Response response = chain.proceed(request);
             if (response.code() > 499) {
@@ -290,19 +295,22 @@ public class NetmeraApi implements Netmera {
     }
 
     public static final class NetmeraApiBuilder {
-        private NetmeraRetryPolicy netmeraRetryPolicy = new NetmeraRetryPolicy();
+        private NetmeraRetryPolicy netmeraRetryPolicy = new NetmeraRetryPolicy.NetmeraRetryPolicyBuilder().build();
         private int maxRetryCount = 3;
         private String targetHost;
         private String apiKey;
         private int connectionTimeout = 30, readTimeout = 30, writeTimeout = 30, callTimeout = 30;
+        private ConnectionPool connectionPool = new ConnectionPool();
 
         public NetmeraApiBuilder(String targetHost, String apiKey) {
             this.targetHost = targetHost;
             this.apiKey = apiKey;
         }
 
-        public static NetmeraApiBuilder NetmeraApi(String targetHost, String apiKey) {
-            return new NetmeraApiBuilder(targetHost, apiKey);
+        public static NetmeraApiBuilder NetmeraApi(String targetHost, String restApiKey) {
+            Assert.notNull(targetHost, "Target Host");
+            Assert.notNull(restApiKey, "Rest Api Key");
+            return new NetmeraApiBuilder(targetHost, restApiKey);
         }
 
         public NetmeraApiBuilder withNetmeraRetryPolicy(NetmeraRetryPolicy netmeraRetryPolicy) {
@@ -311,27 +319,38 @@ public class NetmeraApi implements Netmera {
         }
 
         public NetmeraApiBuilder withReadTimeout(int readTimeout) {
+            Assert.mustBetween(0, Integer.MAX_VALUE, readTimeout, "Read Timeout");
             this.readTimeout = readTimeout;
             return this;
         }
 
         public NetmeraApiBuilder withConnectionTimeout(int connectionTimeout) {
+            Assert.mustBetween(0, Integer.MAX_VALUE, connectionTimeout, "Connection Timeout");
             this.connectionTimeout = connectionTimeout;
             return this;
         }
 
         public NetmeraApiBuilder withWriteTimeout(int writeTimeout) {
+            Assert.mustBetween(0, Integer.MAX_VALUE, writeTimeout, "Write Timeout");
             this.writeTimeout = writeTimeout;
             return this;
         }
 
         public NetmeraApiBuilder withCallTimeout(int callTimeout) {
+            Assert.mustBetween(0, Integer.MAX_VALUE, callTimeout, "Call Timeout");
             this.callTimeout = callTimeout;
             return this;
         }
 
         public NetmeraApiBuilder withMaxRetryCount(int maxRetryCount) {
+            Assert.mustBetween(0, 50, maxRetryCount, "Max Retry Count");
             this.maxRetryCount = maxRetryCount;
+            return this;
+        }
+
+        public NetmeraApiBuilder withConnectionPool(ConnectionPool connectionPool) {
+            Assert.notNull(connectionPool, "Connection Pool");
+            this.connectionPool = connectionPool;
             return this;
         }
 
@@ -341,6 +360,7 @@ public class NetmeraApi implements Netmera {
             netmeraApi.readTimeout = this.readTimeout;
             netmeraApi.writeTimeout = this.writeTimeout;
             netmeraApi.connectionTimeout = this.connectionTimeout;
+            netmeraApi.connectionPool = this.connectionPool;
             netmeraApi.connect();
             return NetmeraProxy.newInstance(netmeraApi);
         }

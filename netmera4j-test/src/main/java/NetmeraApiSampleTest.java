@@ -19,7 +19,7 @@ public class NetmeraApiSampleTest {
 
     private Logger logger = LoggerFactory.getLogger(NetmeraApiDeviceTest.class);
 
-    private Netmera netmeraApi = new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, API_KEY).withNetmeraRetryPolicy(NetmeraRetryPolicy.builder().delay(2).maxDelay(10).unit(ChronoUnit.SECONDS).build()).build();
+    private Netmera netmeraApi = new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, API_KEY).withNetmeraRetryPolicy(new NetmeraRetryPolicy.NetmeraRetryPolicyBuilder().delay(2).maxDelay(10).unit(ChronoUnit.SECONDS).build()).build();
 
     private static final String EXTERNAL_ID = "murat1";
     private static final String TOKEN = "token1";
