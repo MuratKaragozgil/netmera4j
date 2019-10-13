@@ -1,4 +1,0 @@
-rootProject.name = 'com.netmera.rest.lib'
-include 'netmera4j'
-include 'netmera4j-test'
-
