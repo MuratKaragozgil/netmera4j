@@ -91,6 +91,15 @@ public class NetmeraApi implements Netmera {
         notificationService = retrofit.create(NotificationService.class);
     }
 
+    /**
+     * Following request can be used to register multiple devices at the same time.
+     * Instead of registering single device, you can post array of devices for bulk registration.
+     * This method will help you to import your devices into Netmera easily.
+     *
+     * @param addNewDevicesRequest
+     * @param callBack
+     * @throws netmera4j.exception.ValidationException if {@code addNewDevicesRequest} parameters is null or empty
+     */
     public void sendRequest(AddNewDevicesRequest addNewDevicesRequest, NetmeraCallBack<Void> callBack) {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", addNewDevicesRequest);
@@ -98,6 +107,13 @@ public class NetmeraApi implements Netmera {
         call.enqueue(callBack);
     }
 
+    /**
+     * Following request can be used to opt-out the devices of a user or a single device from push notifications.
+     * All of the devices of that user will be opted-out from push notifications.
+     *
+     * @param disablePushRequestWithExternalId if {@code disablePushRequestWithExternalId} parameters is null or empty
+     * @param callBack
+     */
     public void sendRequest(DisablePushRequestWithExternalId disablePushRequestWithExternalId, NetmeraCallBack<Void> callBack) {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", disablePushRequestWithExternalId);
@@ -105,6 +121,13 @@ public class NetmeraApi implements Netmera {
         call.enqueue(callBack);
     }
 
+    /**
+     * Following request can be used to opt-out the devices of a user or a single device from push notifications.
+     * Only one devices which matched with given device token will be opted-out from push notifications.
+     *
+     * @param disablePushRequestWithToken if {@code disablePushRequestWithToken} parameters is null or empty
+     * @param callBack
+     */
     public void sendRequest(DisablePushRequestWithToken disablePushRequestWithToken, NetmeraCallBack<Void> callBack) {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", disablePushRequestWithToken);
@@ -112,6 +135,13 @@ public class NetmeraApi implements Netmera {
         call.enqueue(callBack);
     }
 
+    /**
+     * Following request can be used to opt-in the devices of a user or a single device from push notifications.
+     * If you opt-in a user using extId, all of the devices of that user will be opted-in from push notifications.
+     *
+     * @param enablePushRequestWithExternalId if {@code disablePushRequestWithToken} parameters is null or empty
+     * @param callBack
+     */
     public void sendRequest(EnablePushRequestWithExternalId enablePushRequestWithExternalId, NetmeraCallBack<Void> callBack) {
         callBack.setErrorConverter(errorConverter);
         logger.debug("SendRequest::started::request::{}", enablePushRequestWithExternalId);
@@ -307,6 +337,11 @@ public class NetmeraApi implements Netmera {
             this.apiKey = apiKey;
         }
 
+        /**
+         * @param targetHost
+         * @param restApiKey
+         * @throws netmera4j.exception.ValidationException if {@code targetHost} or {@code restApiKey} is null
+         */
         public static NetmeraApiBuilder NetmeraApi(String targetHost, String restApiKey) {
             Assert.notNull(targetHost, "Target Host");
             Assert.notNull(restApiKey, "Rest Api Key");

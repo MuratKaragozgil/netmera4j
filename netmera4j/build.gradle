@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'netmerarestlib'
-version '1.0-SNAPSHOT'
+group 'com.netmera4j'
+version '1.0'
 
 sourceCompatibility = 1.8
 
