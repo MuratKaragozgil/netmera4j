@@ -12,6 +12,6 @@ addons:
       name: "muratkaragozgil/netmera4j"
       description: "A pleasant and complete Java wrapper for the Netmera Rest Api!"
     notification_email: mu.karagozgil@gmail.com
-    build_command_prepend: "mvn clean"
-    build_command:   "mvn -DskipTests=true -Dgpg.skip compile"
+    build_command_prepend: "mvn -DskipTests=true -Dgpg.skip=true clean"
+    build_command:   "mvn -DskipTests=true -Dgpg.skip=true compile"
     branch_pattern: master
