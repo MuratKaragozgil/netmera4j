@@ -13,5 +13,5 @@ addons:
       description: "A pleasant and complete Java wrapper for the Netmera Rest Api!"
     notification_email: mu.karagozgil@gmail.com
     build_command_prepend: "mvn clean"
-    build_command:   "mvn -DskipTests=true compile"
+    build_command:   "mvn -DskipTests=true -Dgpg.skip compile"
     branch_pattern: master
