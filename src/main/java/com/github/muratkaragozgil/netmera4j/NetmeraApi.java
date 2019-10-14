@@ -328,13 +328,13 @@ public class NetmeraApi implements Netmera {
         }
 
         /**
-         * @param targetHost
-         * @param restApiKey
+         * @param targetHost Rest Api endpoint url(netmera cloud endpoint is https://restapi.netmera.com)
+         * @param restApiKey Api Key from netmera panel
          * @throws ValidationException if {@code targetHost} or {@code restApiKey} is null
          */
         public static NetmeraApiBuilder NetmeraApi(String targetHost, String restApiKey) {
-            Assert.notNull(targetHost, "Target Host");
-            Assert.notNull(restApiKey, "Rest Api Key");
+            Assert.notNullOrEmpty(targetHost, "Target Host");
+            Assert.notNullOrEmpty(restApiKey, "Rest Api Key");
             return new NetmeraApiBuilder(targetHost, restApiKey);
         }
 

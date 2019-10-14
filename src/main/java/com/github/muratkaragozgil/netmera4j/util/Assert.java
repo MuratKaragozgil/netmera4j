@@ -52,8 +52,15 @@ public final class Assert {
 
     public static <T> T notNull(T reference, String parameterName) {
         if (reference == null)
-            throw new NullPointerException(parameterName + " cannot be null");
+            throw new NullPointerException(parameterName + " cannot be null!");
         return reference;
+    }
+
+    public static void notNullOrEmpty(String reference, String parameterName) {
+        if (reference == null)
+            throw new NullPointerException(parameterName + " cannot be null!");
+        if (reference.trim().equalsIgnoreCase(""))
+            throw new ValidationException(parameterName + " cannot be empty!");
     }
 
     public static void state(boolean expression, String errorMessageFormat, Object... args) {
