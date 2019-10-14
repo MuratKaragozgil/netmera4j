@@ -322,9 +322,11 @@ public class NetmeraApi implements Netmera {
         private int connectionTimeout = 30, readTimeout = 30, writeTimeout = 30, callTimeout = 30;
         private ConnectionPool connectionPool = new ConnectionPool();
 
-        public NetmeraApiBuilder(String targetHost, String apiKey) {
+        public NetmeraApiBuilder(String targetHost, String restApiKey) {
+            Assert.notNullOrEmpty(targetHost, "Target Host");
+            Assert.notNullOrEmpty(restApiKey, "Rest Api Key");
             this.targetHost = targetHost;
-            this.apiKey = apiKey;
+            this.apiKey = restApiKey;
         }
 
         /**
