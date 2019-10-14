@@ -42,31 +42,23 @@ public class NetmeraApi implements Netmera {
     private NotificationService notificationService;
     private Converter<ResponseBody, NetmeraError> errorConverter;
 
-    private final String TARGET_HOST;
-
-    private OkHttpClient.Builder httpClient;
-    private ConnectionPool connectionPool = new ConnectionPool();
-    private int connectionTimeout, readTimeout, writeTimeout, callTimeout;
-
-    private NetmeraApi(String targetHost, String restApiKey, NetmeraRetryPolicy netmeraRetryPolicy, Integer maxRetryCount) {
-        this.TARGET_HOST = targetHost;
-
-        httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(connectionTimeout, TimeUnit.SECONDS);
-        httpClient.readTimeout(readTimeout, TimeUnit.SECONDS);
-        httpClient.writeTimeout(writeTimeout, TimeUnit.SECONDS);
-        httpClient.callTimeout(callTimeout, TimeUnit.SECONDS);
-        httpClient.connectionPool(connectionPool);
+    private NetmeraApi(NetmeraApiBuilder netmeraApiBuilder) {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(netmeraApiBuilder.connectionTimeout, TimeUnit.SECONDS);
+        httpClient.readTimeout(netmeraApiBuilder.readTimeout, TimeUnit.SECONDS);
+        httpClient.writeTimeout(netmeraApiBuilder.writeTimeout, TimeUnit.SECONDS);
+        httpClient.callTimeout(netmeraApiBuilder.callTimeout, TimeUnit.SECONDS);
+        httpClient.connectionPool(netmeraApiBuilder.connectionPool);
 
         RetryPolicy<okhttp3.Response> retryPolicy = new RetryPolicy<okhttp3.Response>()
                 .handle(SocketException.class)
                 .handleResultIf(result -> result.code() > 499)
-                .withBackoff(netmeraRetryPolicy.getDelay(), netmeraRetryPolicy.getMaxDelay(), netmeraRetryPolicy.getUnit())
+                .withBackoff(netmeraApiBuilder.netmeraRetryPolicy.getDelay(), netmeraApiBuilder.netmeraRetryPolicy.getMaxDelay(), netmeraApiBuilder.netmeraRetryPolicy.getUnit())
                 .onFailedAttempt(e -> logger.error("Failed Attempt!::{}", e.getLastResult().code()))
-                .withMaxRetries(maxRetryCount);
+                .withMaxRetries(netmeraApiBuilder.maxRetryCount);
 
         httpClient.interceptors().add(chain -> {
-            Request request = chain.request().newBuilder().addHeader(NetmeraApiContants.NETMERA_HEADER_KEY, restApiKey).build();
+            Request request = chain.request().newBuilder().addHeader(NetmeraApiContants.NETMERA_HEADER_KEY, netmeraApiBuilder.apiKey).build();
             // try the request
             okhttp3.Response response = chain.proceed(request);
             if (response.code() > 499) {
@@ -76,11 +68,9 @@ public class NetmeraApi implements Netmera {
             // otherwise just pass the original response on
             return response;
         });
-    }
 
-    private void connect() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(TARGET_HOST)
+                .baseUrl(netmeraApiBuilder.targetHost)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
@@ -390,14 +380,7 @@ public class NetmeraApi implements Netmera {
         }
 
         public Netmera build() {
-            NetmeraApi netmeraApi = new NetmeraApi(targetHost, apiKey, netmeraRetryPolicy, maxRetryCount);
-            netmeraApi.callTimeout = this.callTimeout;
-            netmeraApi.readTimeout = this.readTimeout;
-            netmeraApi.writeTimeout = this.writeTimeout;
-            netmeraApi.connectionTimeout = this.connectionTimeout;
-            netmeraApi.connectionPool = this.connectionPool;
-            netmeraApi.connect();
-            return NetmeraProxy.newInstance(netmeraApi);
+            return NetmeraProxy.newInstance(new NetmeraApi(this));
         }
     }
 }
