@@ -8,11 +8,3 @@ env:
 
 install:
   - mvn install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V
-
-addons:
-  coverity_scan:
-    project:
-      name: "muratkaragozgil/netmera4j"
-      description: "A pleasant and complete Java wrapper for the Netmera Rest Api!"
-    notification_email: m.karagozgil@gmail.com
-    branch_pattern: master
