@@ -1,8 +1,8 @@
-[![Chat at https://gitter.im/javalin-io/general](https://badges.gitter.im/netmera4j/general.svg)](https://gitter.im/netmera4j/general)
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg?style=plastic)](https://github.com/muratkaragozgil/netmera4j/blob/master/LICENSE)
+[![Chat at https://gitter.im/javalin-io/general](https://badges.gitter.im/netmera4j/general.svg)](https://gitter.im/netmera4j/general)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.muratkaragozgil/netmera4j.svg?maxAge=60&colorB=53C92E)](https://maven-badges.herokuapp.com/maven-central/com.github.muratkaragozgil/netmera4j)
 [![Javadocs](http://www.javadoc.io/badge/com.github.muratkaragozgil/netmera4j.svg)](http://www.javadoc.io/doc/com.github.muratkaragozgil/netmera4j)
-
+[![Build Status](https://travis-ci.com/MuratKaragozgil/netmera4j.svg?branch=master)](https://travis-ci.com/MuratKaragozgil/netmera4j)
 
 Netmera4j
 ========
