@@ -1,3 +1,4 @@
+[![Chat at https://gitter.im/javalin-io/general](https://badges.gitter.im/netmera4j/general.svg)](https://gitter.im/netmera4j/general)
 [![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg?style=plastic)](https://github.com/muratkaragozgil/netmera4j/blob/master/LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.muratkaragozgil/netmera4j.svg?maxAge=60&colorB=53C92E)](https://maven-badges.herokuapp.com/maven-central/com.github.muratkaragozgil/netmera4j)
 
