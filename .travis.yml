@@ -7,7 +7,7 @@ env:
     secure: W/C2T1XvqMZOlfvIqs5DGCSYs/DNQLVvFOsfbLc+0rmN9RuwmFNUp5G4YAoh3J+02hTujM91KO1IsL8BTPyf/L+4JMOMJH+w60Sm4QgugkiUsEaginAJBHQsP1w5nvS1MquL0eusGU5Z+D8g9Sh+r8XvetoxJH5yNk0hM3fzrQyWDtXCAHAVtI5nyKwIkpc6K6hC8oSGhetgh2PKh4nUk2YVLmM/rYBpTGtUbz8bIBAVwugvt5eZMtktYLaSI6VAny16TnyOd6OXOhTMdT4GBMOfVL9rLT40MACoTkAHXQ98vNoxBOmj8DjcKs07UZa6kAgpVg5mkytxS34R3hbeV99O6LWdJEdfUgTzvqtwkvGLqXQ5HGbjMlOz/5wPt1D8U7MNARNfsugWhyK1FkuIa9m99UJ0uYfZwLs6mTCVcaTi5FsGpRcfs/pM0/OZOCmiHAuou+A+zCtSrzrZfEvtiAvg/8FaFkdBGAHR+RWjoOwydJV6/oyhZk+ivzPVx6yUxDprkyjWUDW2ZcCLO0Cr6cwpkXD7qtXYTKL5iJfrqnFzkjRdQB4BQ+8JaCwPzCJkbfZtIwiy62Vs1RG/QFrrDkwLIYg2aN7I0urgcXk3Zv6ZB/dF8pxJidUtvySsNm+TC3Kfg6E+aj0LVZV8c5N6DxILRM78i52GyDaMEptxFEY=
 
 install:
-  - mvn install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true
+  - mvn install -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V
 
 addons:
   coverity_scan:
