@@ -1,8 +1,11 @@
 package com.github.muratkaragozgil.netmera4j;
 
+import com.github.muratkaragozgil.netmera4j.callback.NetmeraCallBack;
 import com.github.muratkaragozgil.netmera4j.exception.ValidationException;
+import com.github.muratkaragozgil.netmera4j.request.device.AddNewDevicesRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import retrofit2.Response;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -76,4 +79,32 @@ public class NetmeraApiTest {
         assertThrows(NullPointerException.class, () -> new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, REST_API_KEY).withNetmeraRetryPolicy(null).build());
     }
 
+    @Test
+    public void shouldThrowNullPointerExceptionExceptionWhenSeConnectionPoolNull() {
+        assertThrows(NullPointerException.class, () -> new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, REST_API_KEY).withConnectionPool(null).build());
+    }
+
+    @Test
+    public void shouldThrowValidationExceptionWhenSentAddNewDevicesRequestNotValid() {
+        assertThrows(NullPointerException.class, () -> netmera.sendRequest(AddNewDevicesRequest.AddNewDevicesRequestBuilder.withDeviceList(null).build(), getStandardNetmeraCallBack()));
+    }
+
+    private NetmeraCallBack<Void> getStandardNetmeraCallBack() {
+        return new NetmeraCallBack<Void>() {
+            @Override
+            protected void handleResponseData(Void data) {
+
+            }
+
+            @Override
+            protected void handleError(Response<Void> response) {
+
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+
+            }
+        };
+    }
 }
