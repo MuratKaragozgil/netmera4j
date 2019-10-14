@@ -76,4 +76,9 @@ public class NetmeraApiTest {
         assertThrows(NullPointerException.class, () -> new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, REST_API_KEY).withNetmeraRetryPolicy(null).build());
     }
 
+    @Test
+    public void shouldThrowNullPointerExceptionExceptionWhenSetConnectionPoolNull() {
+        assertThrows(NullPointerException.class, () -> new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, REST_API_KEY).withConnectionPool(null).build());
+    }
+
 }
