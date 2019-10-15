@@ -4,10 +4,10 @@
 [![Javadocs](http://www.javadoc.io/badge/com.github.muratkaragozgil/netmera4j.svg)](http://www.javadoc.io/doc/com.github.muratkaragozgil/netmera4j)
 [![Build Status](https://travis-ci.com/MuratKaragozgil/netmera4j.svg?branch=master)](https://travis-ci.com/MuratKaragozgil/netmera4j)
 
-Netmera4j
+Netmera4j - A pleasant and complete Java wrapper for the Netmera Rest Api!
 ========
 
-A pleasant and complete Java wrapper for the Netmera Rest Api!
+Netmera4j is a wrapper library for using Netmera restapi features. Includes pooling, retring and async calling logic by default. But fortunately it gives functionality to change these settings.
 
 For more information please visit [the website][1].
 
