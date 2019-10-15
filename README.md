@@ -54,8 +54,7 @@ Retry Configuration
 
 ```java
 
-Netmera netmera = new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, REST_API_KEY).build();
-netmera = new NetmeraApi.NetmeraApiBuilder(restEndpoint, restApiKey) //
+netmera = new NetmeraApi.NetmeraApiBuilder(TARGET_HOST, REST_API_KEY) //
                 .withMaxRetryCount(5) //
                 .withNetmeraRetryPolicy(new NetmeraRetryPolicy.NetmeraRetryPolicyBuilder() //
                         .delay(5) //
@@ -66,6 +65,115 @@ netmera = new NetmeraApi.NetmeraApiBuilder(restEndpoint, restApiKey) //
 
 ```
 
+Fire Event
+--------------------------------------
+To fire an event, you must set external id and event name firstly.
+Then you can set optional and required parameters of event. You can also set multiple event at one time.
+Note that you can set optional and required event parameters from panel.
+
+```java
+
+netmera.sendRequest(FireEventsRequest.builder()
+                .eventList(Arrays.asList(new SingleEvent.SingleEventBuilder(EXTERNAL_ID, EVENT_NAME) //
+                        .addParameter("itemId", "1234") //
+                        .addParameter("channel", "Facebook") //
+                        .build(), //
+                         new SingleEvent.SingleEventBuilder(EXTERNAL_ID, EVENT_NAME)
+                        .addParameter("itemId", "12345") //
+                        .addParameter("channel", "Instagram") //
+                        .build())) //
+                .build(), new NetmeraCallBack<Void>() {
+            @Override
+            protected void handleResponseCode(int httpStatus) {
+            }
+
+            @Override
+            protected void handleResponseData(Void data) {
+
+            }
+
+            @Override
+            protected void handleError(Response<Void> response) {
+
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+
+            }
+        });
+```
+
+Send Bulk Notification
+--------------------------------------
+
+To sending notification to all registered users.
+ 
+```java
+
+netmera.sendRequest(SendBulkNotificationRequest.builder()
+                .message(BulkMessage.builder() //
+                        .title(TITLE) //
+                        .text("testSendBasicBulkNotification") //
+                        .platforms(Arrays.asList(Platform.ANDROID, Platform.IOS)) //
+                        .build()) //
+                .target(new BasicTarget.BasicTargetBuilder() //
+                        .sendToAll(true) //
+                        .build()) //
+                .build(), new NetmeraCallBack<NotificationResponse>() {
+            @Override
+            protected void handleResponseCode(int httpStatus) {
+            }
+
+            @Override
+            protected void handleResponseData(NotificationResponse data) {
+            }
+
+            @Override
+            protected void handleError(Response<NotificationResponse> response) {
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+            }
+        });
+
+```
+
+Send Transactional Notification
+--------------------------------------
+
+Transactional notifications are previously configured messages(from panel) which can be sent to specific user.
+You need to set TRANSACTIONAL_NOTIFICATION_KEY identifier which created message from netmera panel.
+ 
+```java
+
+netmera.sendRequest(SendTransactionalNotificationRequest.builder() //
+                .message(SingleMessage.builder().build() //
+                        .addParameter("customMessage", "your-funny-message")) //
+                .notificationKey(TRANSACTIONAL_NOTIFICATION_KEY.toString()) //
+                .target(new BasicTarget.BasicTargetBuilder() //
+                        .externalId(EXTERNAL_ID) //
+                        .build()) //
+                .build(), new NetmeraCallBack<Void>() {
+
+            @Override
+            protected void handleResponseCode(int httpStatus) {
+            }
+
+            @Override
+            protected void handleResponseData(Void data) {
+            }
+
+            @Override
+            protected void handleError(Response<Void> response) {
+            }
+
+            @Override
+            protected void handleException(Exception t) {
+            }
+        });
+```
 License
 =======
 
