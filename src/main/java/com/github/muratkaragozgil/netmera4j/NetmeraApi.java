@@ -37,10 +37,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class NetmeraApi implements Netmera {
 
-    private UserService userService;
-    private EventService eventService;
-    private NotificationService notificationService;
-    private Converter<ResponseBody, NetmeraError> errorConverter;
+    private final UserService userService;
+    private final EventService eventService;
+    private final NotificationService notificationService;
+    private final Converter<ResponseBody, NetmeraError> errorConverter;
 
     private NetmeraApi(NetmeraApiBuilder netmeraApiBuilder) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -65,7 +65,7 @@ public class NetmeraApi implements Netmera {
                 // retry the request
                 response = Failsafe.with(retryPolicy).get(() -> chain.proceed(request));
             }
-            // otherwise just pass the original response on
+            // otherwise, just pass the original response on
             return response;
         });
 

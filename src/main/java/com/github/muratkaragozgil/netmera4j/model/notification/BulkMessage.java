@@ -29,6 +29,7 @@ public class BulkMessage extends Message {
      * Web Push fields
      */
     private String wpChromeImage;
+    private String iconUrl;
     private ClickAction click;
     private boolean interactionRequired;
 }
